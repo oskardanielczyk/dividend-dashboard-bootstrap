@@ -5,6 +5,7 @@ import Home from "./routes/home/home.component";
 import Calculator from "./routes/calculator/calculator.component";
 import Graphs from "./routes/graphs/graphs.component";
 import Gifts from "./routes/gifts/gifts.component";
+import Authentication from "./routes/authentication/authentication.component";
 
 import "./App.styles.scss";
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="graphs" element={<Graphs />} />
         <Route path="gifts" element={<Gifts />} />
       </Route>
+      <Route path="/auth" element={<Authentication />} />
     </Routes>
   );
 }
