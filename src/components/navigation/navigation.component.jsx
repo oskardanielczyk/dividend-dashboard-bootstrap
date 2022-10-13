@@ -1,42 +1,37 @@
-import { Outlet, Link } from "react-router-dom";
-
-import { ReactComponent as DashboardLogo } from "../../assets/ballot.svg";
-import { ReactComponent as CalculatorLogo } from "../../assets/pulse.svg";
-import { ReactComponent as GraphsLogo } from "../../assets/trophy.svg";
-import { ReactComponent as GiftsLogo } from "../../assets/gift.svg";
+import { Container, Nav, Navbar, Stack } from "react-bootstrap";
+import { Outlet } from "react-router-dom";
 
 import "./navigation.styles.scss";
 
 const Navigation = () => {
   return (
-    <div className="main-container">
-      <div className="navigation-container">
-        <Link className="logo-container" to="/">
-          <span className="logo">dividash</span>
-        </Link>
-        <div className="nav-link-container">
-          <Link className="nav-link" to="/">
-            <DashboardLogo className="nav-link-logo" />
-            Dashboard
-          </Link>
-          <Link className="nav-link" to="/calculator">
-            <CalculatorLogo className="nav-link-logo" />
-            Calculator
-          </Link>
-          <Link className="nav-link" to="/graphs">
-            <GraphsLogo className="nav-link-logo" />
-            Graphs
-          </Link>
-          <Link className="nav-link" to="/gifts">
-            <GiftsLogo className="nav-link-logo" />
-            Gifts
-          </Link>
-        </div>
-      </div>
-      <div className="content-container">
+    <>
+      <Stack gap={3}>
+        <Navbar bg="dark" expand="lg" variant="dark">
+          <Container>
+            <Navbar.Brand href="/">Dividend-dashboard</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto">
+                <Nav.Link href="/">Strona domowa</Nav.Link>
+                <Nav.Link href="/calc">Kalkulator</Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
         <Outlet />
-      </div>
-    </div>
+      </Stack>
+      <Navbar bg="light" expand="lg" variant="light" fixed="bottom">
+        <Container>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Navbar.Text>
+              stworzone przez oskar.danielczyk@gmail.com @2022
+            </Navbar.Text>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </>
   );
 };
 

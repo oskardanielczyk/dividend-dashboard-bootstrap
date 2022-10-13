@@ -1,16 +1,24 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import { UserProvider } from "./contexts/user/user.context";
 
 import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { StocksProvider } from "./contexts/stocks/stocks.context";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <UserProvider>
+        <StocksProvider>
+          <App />
+        </StocksProvider>
+      </UserProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
