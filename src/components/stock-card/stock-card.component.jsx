@@ -62,11 +62,11 @@ const StockCard = ({ stock }) => {
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Zamknij
+          <Button variant="outline-secondary" onClick={handleClose}>
+            Anuluj
           </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Zapisz zmiany
+          <Button variant="outline-success" onClick={handleClose}>
+            Dodaj
           </Button>
         </Modal.Footer>
       </Modal>

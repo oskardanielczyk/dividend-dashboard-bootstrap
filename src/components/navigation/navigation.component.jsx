@@ -23,12 +23,9 @@ const Navigation = () => {
       </Stack>
       <Navbar bg="light" expand="lg" variant="light" fixed="bottom">
         <Container>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Navbar.Text>
-              stworzone przez oskar.danielczyk@gmail.com @2022
-            </Navbar.Text>
-          </Navbar.Collapse>
+          <Navbar.Text>
+            stworzone przez oskar.danielczyk@gmail.com @2022
+          </Navbar.Text>
         </Container>
       </Navbar>
     </>
