@@ -15,8 +15,7 @@ const StockTable = () => {
 
   // Funkcja zmieniająca tablicę wszystkich tranaskcji na tablicę sumujcą wielkości pozycji z podziałem na aktywa
   const createAllStocksArray = (stocks) => {
-    const stocksTemp = JSON.parse(localStorage.getItem("stocks"));
-    const map = new Map(stocksTemp.map((i) => [i.name, i.ticker]));
+    const map = new Map(stocks.map((i) => [i.name, i.ticker]));
     Array.from(map).forEach(([key, value]) => {
       let ticker,
         averagePrice = 0,

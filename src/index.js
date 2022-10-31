@@ -8,14 +8,17 @@ import reportWebVitals from "./reportWebVitals";
 import { StocksProvider } from "./contexts/stocks/stocks.context";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { UserInfoProvider } from "./contexts/user-info/user-info.context";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
   <BrowserRouter>
-    <StocksProvider>
-      <App />
-    </StocksProvider>
+    <UserInfoProvider>
+      <StocksProvider>
+        <App />
+      </StocksProvider>
+    </UserInfoProvider>
   </BrowserRouter>
   // </React.StrictMode>
 );
