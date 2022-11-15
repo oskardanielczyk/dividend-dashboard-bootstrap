@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Row, Col, Form, Table } from "react-bootstrap";
+import { Container, Row, Col, Form } from "react-bootstrap";
 import ReactDatePicker from "react-datepicker";
 import Select from "react-select";
 import axios from "axios";
@@ -41,7 +41,7 @@ const Calculator = () => {
         );
         const [temp_currency] = response_currency.data;
         const currency_array = temp_currency.rates;
-        currency_array.map((rate) => {
+        currency_array.forEach((rate) => {
           helper_array.push({
             value: rate.code.toLowerCase(),
             label: rate.code + " - " + rate.currency,

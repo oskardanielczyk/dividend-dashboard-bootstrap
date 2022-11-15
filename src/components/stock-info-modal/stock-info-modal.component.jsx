@@ -3,8 +3,8 @@ import { StocksContext } from "../../contexts/stocks/stocks.context";
 import { Modal, Button, Table } from "react-bootstrap";
 
 const StockInfoModal = ({ show, handleClose, stockName, stockTicker }) => {
-  const { stocksData } = useContext(StocksContext);
-  const stocks = stocksData;
+  const { stocksArray } = useContext(StocksContext);
+  const stocks = stocksArray;
   const oneStock = [];
 
   const createOneStockArray = () => {

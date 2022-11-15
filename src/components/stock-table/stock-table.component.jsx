@@ -9,38 +9,9 @@ const StockTable = () => {
   const [modalShow, setModalShow] = useState(false);
   const [selectedStockName, setSelectedStockName] = useState(null);
   const [selectedStockTicker, setSelectedStockTicker] = useState(null);
-  const { stocksData } = useContext(StocksContext);
-  const stocks = stocksData;
-  const allStocks = [];
+  const { allStocks } = useContext(StocksContext);
 
-  // Funkcja zmieniająca tablicę wszystkich tranaskcji na tablicę sumujcą wielkości pozycji z podziałem na aktywa
-  const createAllStocksArray = (stocks) => {
-    const map = new Map(stocks.map((i) => [i.name, i.ticker]));
-    Array.from(map).forEach(([key, value]) => {
-      let ticker,
-        averagePrice = 0,
-        numberOfStocks = 0,
-        price = 164.95;
-      stocks.forEach((stock) => {
-        if (stock.name === key) {
-          ticker = stock.ticker;
-          averagePrice === 0
-            ? (averagePrice = stock.price)
-            : (averagePrice = (averagePrice + stock.price) / 2);
-          numberOfStocks += stock.numberOfStocks;
-        }
-      });
-      allStocks.push({
-        name: key,
-        ticker: ticker,
-        averagePrice: averagePrice,
-        price: price,
-        return: ((price - averagePrice) / averagePrice) * 100,
-        numberOfStocks: numberOfStocks,
-      });
-    });
-  };
-  createAllStocksArray(stocks);
+  const allStocksData = allStocks;
 
   // Funkcje otwierające oraz zamykające modala
   const handleShow = () => setModalShow(true);
@@ -68,7 +39,7 @@ const StockTable = () => {
             </tr>
           </thead>
           <tbody>
-            {allStocks.map((stock) => (
+            {allStocksData.map((stock) => (
               <StockTableRow
                 stock={stock}
                 key={stock.averagePrice}

@@ -21,13 +21,13 @@ const Navigation = () => {
         </Navbar>
         <Outlet />
       </Stack>
-      <Navbar bg="light" expand="lg" variant="light" fixed="bottom">
+      {/* <Navbar bg="light" expand="lg" variant="light" fixed="bottom">
         <Container>
           <Navbar.Text>
             stworzone przez oskar.danielczyk@gmail.com @2022
           </Navbar.Text>
         </Container>
-      </Navbar>
+      </Navbar> */}
     </>
   );
 };
