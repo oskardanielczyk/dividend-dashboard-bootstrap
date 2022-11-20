@@ -1,16 +1,18 @@
 import { useContext } from "react";
-import { StocksContext } from "../../contexts/stocks/stocks.context";
 import { Modal, Button, Table } from "react-bootstrap";
 
-const StockInfoModal = ({ show, handleClose, stockName, stockTicker }) => {
+import { StocksContext } from "../../contexts/stocks/stocks.context";
+
+const StockInfoModal = (props) => {
   const { stocksArray } = useContext(StocksContext);
-  const stocks = stocksArray;
   const oneStock = [];
 
-  const createOneStockArray = () => {
+  const createOneStockArray = (stocks) => {
+    if (!stocksArray) return;
     stocks.forEach((stock) => {
-      if (stock.name === stockName) {
+      if (stock.name === props.stockName) {
         oneStock.push({
+          id: stock.id,
           date: stock.date,
           name: stock.name,
           ticker: stock.ticker,
@@ -20,19 +22,18 @@ const StockInfoModal = ({ show, handleClose, stockName, stockTicker }) => {
       }
     });
   };
-
-  createOneStockArray();
+  createOneStockArray(stocksArray);
 
   return (
     <Modal
-      show={show}
-      onHide={handleClose}
+      show={props.show}
+      onHide={props.handleClose}
       backdrop="static"
       centered
       size="lg"
     >
       <Modal.Header closeButton>
-        <Modal.Title className="h5">{`${stockName} (${stockTicker}) - historia transakcji`}</Modal.Title>
+        <Modal.Title className="h5">{`${props.stockName} (${props.stockTicker}) - historia transakcji`}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Table striped bordered>
@@ -46,7 +47,7 @@ const StockInfoModal = ({ show, handleClose, stockName, stockTicker }) => {
           </thead>
           <tbody>
             {oneStock.map((stock) => (
-              <tr className="align-middle" key={stock.price}>
+              <tr className="align-middle" key={stock.id}>
                 <td>{stock.name}</td>
                 <td>{stock.ticker}</td>
                 <td>{stock.price}</td>
@@ -57,7 +58,7 @@ const StockInfoModal = ({ show, handleClose, stockName, stockTicker }) => {
         </Table>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="outline-secondary" onClick={handleClose}>
+        <Button variant="outline-secondary" onClick={props.handleClose}>
           Zamknij
         </Button>
       </Modal.Footer>

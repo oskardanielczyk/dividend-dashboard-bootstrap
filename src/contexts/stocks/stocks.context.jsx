@@ -1,9 +1,12 @@
-import { createContext, useReducer, useEffect } from "react";
+import { createContext, useReducer, useEffect, useContext } from "react";
 import axios from "axios";
 
+import { UserContext } from "../../contexts/user/user.context";
+
 export const StocksContext = createContext({
-  stocksData: [],
+  stocksArray: [],
   allStocksData: [],
+  isStocksLoading: false,
 });
 
 const stocksReducer = (state, action) => {
@@ -12,7 +15,23 @@ const stocksReducer = (state, action) => {
   switch (type) {
     case "UPDATE_STOCKS":
       return {
+        ...state,
         stocksArray: payload,
+      };
+    case "UPDATE_ALL_STOCKS":
+      return {
+        ...state,
+        allStocksData: payload,
+      };
+    case "TURN_ON_LOADING":
+      return {
+        ...state,
+        isStocksLoading: true,
+      };
+    case "TURN_OFF_LOADING":
+      return {
+        ...state,
+        isStocksLoading: false,
       };
     default:
       throw new Error(`Unhandled type ${type} in userReducer`);
@@ -20,46 +39,55 @@ const stocksReducer = (state, action) => {
 };
 
 const INITIAL_STATE = {
-  stocksArray: [
-    {
-      date: "13-11-2022",
-      name: "Apple",
-      ticker: "AAPL",
-      price: 134.5,
-      numberOfStocks: 14,
-    },
-  ],
+  stocksArray: [],
+  allStocksData: [],
+  isStocksLoading: false,
 };
 
 export const StocksProvider = ({ children }) => {
+  const { isLoggedIn, userLoginData } = useContext(UserContext);
   const [state, dispatch] = useReducer(stocksReducer, INITIAL_STATE);
 
-  useEffect(() => {
-    let transactions;
-    const downloadTransactions = async () => {
-      transactions = await axios.get(
-        `https://dividend-dashboard-backend.herokuapp.com/api/stocks/user/6368f3e1a030b0eda0998b43`
-      );
-      dispatch({
-        type: "UPDATE_STOCKS",
-        payload: transactions.data.transactions,
-      });
-    };
-    downloadTransactions();
-  }, []);
-
   const allStocks = [];
+  let transactions;
+
+  useEffect(() => {
+    const downloadTransactions = async () => {
+      dispatch({ type: "TURN_ON_LOADING" });
+      try {
+        transactions = await axios.get(
+          `https://dividend-dashboard-backend.herokuapp.com/api/stocks/user/${userLoginData.userId}`
+        );
+        if (transactions)
+          dispatch({
+            type: "UPDATE_STOCKS",
+            payload: transactions.data.transactions,
+          });
+        dispatch({ type: "TURN_OFF_LOADING" });
+      } catch (error) {
+        console.log(error);
+        dispatch({ type: "TURN_OFF_LOADING" });
+      }
+    };
+    if (isLoggedIn) downloadTransactions();
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    createAllStocksArray(state.stocksArray);
+  }, [state.stocksArray]);
 
   // Funkcja zmieniająca tablicę wszystkich tranaskcji na tablicę sumujcą wielkości pozycji z podziałem na aktywa
   const createAllStocksArray = (stocks) => {
     const map = new Map(stocks.map((i) => [i.name, i.ticker]));
     Array.from(map).forEach(([key, value]) => {
-      let ticker,
+      let id,
+        ticker,
         averagePrice = 0,
         numberOfStocks = 0,
         price = 164.76;
       stocks.forEach((stock) => {
         if (stock.name === key) {
+          id = stock.id;
           ticker = stock.ticker;
           averagePrice === 0
             ? (averagePrice = stock.price)
@@ -68,23 +96,24 @@ export const StocksProvider = ({ children }) => {
         }
       });
       allStocks.push({
+        id,
         name: key,
-        ticker: ticker,
-        averagePrice: averagePrice,
-        price: price,
+        ticker,
+        averagePrice,
+        price,
         return: ((price - averagePrice) / averagePrice) * 100,
-        numberOfStocks: numberOfStocks,
+        numberOfStocks,
       });
     });
+    dispatch({
+      type: "UPDATE_ALL_STOCKS",
+      payload: allStocks,
+    });
   };
-  createAllStocksArray(state.stocksArray);
 
-  const { stocksArray } = state;
-  console.log(stocksArray);
-
-  const value = { stocksArray, allStocks };
+  // console.log("State", state);
 
   return (
-    <StocksContext.Provider value={value}>{children}</StocksContext.Provider>
+    <StocksContext.Provider value={state}>{children}</StocksContext.Provider>
   );
 };

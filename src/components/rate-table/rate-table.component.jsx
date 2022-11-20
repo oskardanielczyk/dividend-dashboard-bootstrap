@@ -1,4 +1,5 @@
 import { Table } from "react-bootstrap";
+import { DateTime } from "luxon";
 
 const RateTable = ({ startDate, currency, rate }) => {
   return (
@@ -12,7 +13,9 @@ const RateTable = ({ startDate, currency, rate }) => {
       </thead>
       <tbody>
         <tr>
-          <td>{startDate.toLocaleDateString("en-us")}</td>
+          <td>
+            {DateTime.fromISO(startDate.toISOString()).toFormat("dd.MM.yyyy")}
+          </td>
           <td>{currency.label || currency}</td>
           <td>{`${rate} PLN`}</td>
         </tr>

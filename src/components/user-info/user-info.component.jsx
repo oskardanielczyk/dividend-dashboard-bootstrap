@@ -1,23 +1,24 @@
 import { useContext } from "react";
 import { Container } from "react-bootstrap";
 
-import { UserInfoContext } from "../../contexts/user-info/user-info.context";
+import { UserContext } from "../../contexts/user/user.context";
 import { ReactComponent as UserLogo } from "../../assets/person.svg";
 
 const UserInfo = () => {
-  const [userInfoData] = useContext(UserInfoContext);
+  const { userLoginData } = useContext(UserContext);
 
   return (
     <Container>
       <div className="d-flex justify-content-between">
         <div>
           <span>
-            {`Wartość inwestycji: ${userInfoData.walletBalance} PLN, zmiana dzienna: `}
-            <span className="text-danger">{`${userInfoData.walletDayChange}%`}</span>
+            {`Wartość inwestycji: 14564 PLN, zmiana dzienna: `}
+            <span className="text-danger">{`-34%`}</span>
           </span>
         </div>
         <div>
-          {`${userInfoData.name}`} <UserLogo />
+          {userLoginData ? `${userLoginData.userEmail}` : "Niezalogowany"}{" "}
+          <UserLogo />
         </div>
       </div>
     </Container>

@@ -1,15 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import ReactDatePicker from "react-datepicker";
 import Select from "react-select";
 import axios from "axios";
-import "./calculator.styles.scss";
-import { useEffect } from "react";
+import { DateTime } from "luxon";
+
 import Error from "../../components/error/error.component";
 import RateTable from "../../components/rate-table/rate-table.component";
+import "./calculator.styles.scss";
 
 const Calculator = () => {
-  const [startDate, setStartDate] = useState(new Date());
+  const calcLastDay = () => {
+    return DateTime.now().minus({ days: 1 }).weekday === 7
+      ? DateTime.now().minus({ days: 3 })
+      : DateTime.now().minus({ days: 1 });
+  };
+
+  const [startDate, setStartDate] = useState(new Date(calcLastDay()));
   const [currency, setCurrency] = useState("USD");
   const [allowedCurrencies, setAllowedCurrencies] = useState([]);
   const [rate, setRate] = useState(null);
@@ -80,6 +87,7 @@ const Calculator = () => {
                 onChange={(date) => setStartDate(date)}
                 filterDate={isWeekday}
                 className="form-control text-muted"
+                dateFormat="dd.MM.yyyy"
               />
               <Form.Text className="text-muted">
                 Podaj datę dywidendy w formacie D-1
@@ -107,7 +115,10 @@ const Calculator = () => {
               </div>
             </div>
           ) : error ? (
-            <Error msg={error} />
+            <Error
+              className="alert-danger"
+              msg={"Brak danych dla wybranej daty. Zmień datę."}
+            />
           ) : (
             <RateTable startDate={startDate} currency={currency} rate={rate} />
           )}

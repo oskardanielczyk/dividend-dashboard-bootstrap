@@ -1,7 +1,7 @@
-const Error = ({ msg }) => {
+const Error = (props) => {
   return (
-    <div className="alert alert-danger" role="alert">
-      {msg}
+    <div className={`alert ${props.className}`} role="alert">
+      {props.msg}
     </div>
   );
 };

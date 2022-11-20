@@ -8,6 +8,7 @@ import {
   Tooltip,
 } from "recharts";
 import { useContext } from "react";
+
 import { StocksContext } from "../../contexts/stocks/stocks.context";
 
 const TestChart = () => {
@@ -15,7 +16,7 @@ const TestChart = () => {
   const stocks = stocksArray;
   const allStocks = [];
 
-  const createAllStocksArray = (stocks) => {
+  const createArrayForChart = (stocks) => {
     const map = new Map(stocks.map((i) => [i.name, i.ticker]));
     Array.from(map).forEach(([key, value]) => {
       let numberOfStocks = 0,
@@ -31,7 +32,7 @@ const TestChart = () => {
       });
     });
   };
-  createAllStocksArray(stocks);
+  createArrayForChart(stocks);
 
   const data = [
     { name: "Group A", value: 400 },
