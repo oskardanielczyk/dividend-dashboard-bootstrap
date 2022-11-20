@@ -39,10 +39,6 @@ export const UserProvider = ({ children }) => {
     navigate("/auth");
   };
 
-  // useEffect(() => {
-  //   const
-  // }, []);
-
   const value = {
     userLoginData,
     setUserLoginData,
