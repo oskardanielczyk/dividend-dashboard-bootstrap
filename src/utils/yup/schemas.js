@@ -1,7 +1,5 @@
 import * as yup from "yup";
 
-const passwordRules = "";
-
 export const loginSchema = yup.object().shape({
   email: yup.string().email("Nieprawidłowy email").required("Pole wymagane"),
   password: yup.string().required("Pole wymagane"),
@@ -20,5 +18,21 @@ export const signupSchema = yup.object().shape({
   confirmPasswordSubmit: yup
     .string()
     .oneOf([yup.ref("passwordSubmit"), null], "Hasła muszą się zgadzać")
+    .required("Pole wymagane"),
+});
+
+export const transactionSchema = yup.object().shape({
+  ticker: yup.string().required("Pole wymagane"),
+  name: yup.string().required("Pole wymagane"),
+  price: yup
+    .number()
+    .typeError("Cena akcji musi być liczbą")
+    .positive("Cena nie może być ujemna")
+    .required("Pole wymagane"),
+  quantity: yup
+    .number()
+    .typeError("Ilość akcji musi być liczbą")
+    .positive("Ilość akcji musi być dodatnia")
+    .integer("Ilość akcji musi być liczbą całkowitą")
     .required("Pole wymagane"),
 });
