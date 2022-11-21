@@ -4,14 +4,20 @@ import { Container, Button } from "react-bootstrap";
 import { UserContext } from "../../contexts/user/user.context";
 import { ReactComponent as UserLogo } from "../../assets/person.svg";
 import AddStockModal from "../add-stock-modal/add-stock-modal.component";
+import StockHistoryModal from "../stock-info-modal/stock-history-modal.component";
 
 const UserInfo = () => {
-  const [modalShow, setModalShow] = useState(false);
+  const [addModalShow, setAddModalShow] = useState(false);
+  const [historyModalShow, setHistoryModalShow] = useState(false);
   const { userLoginData } = useContext(UserContext);
 
-  // Funkcje otwierające oraz zamykające modala
-  const handleShow = () => setModalShow(true);
-  const handleClose = () => setModalShow(false);
+  // Funkcje otwierające oraz zamykające modala AddModal
+  const handleAddModalShow = () => setAddModalShow(true);
+  const handleAddModalClose = () => setAddModalShow(false);
+
+  // Funkcje otwierające oraz zamykające modala HistoryModal
+  const handleHistoryModalShow = () => setHistoryModalShow(true);
+  const handleHistoryModalClose = () => setHistoryModalShow(false);
 
   return (
     <>
@@ -28,14 +34,29 @@ const UserInfo = () => {
               {userLoginData ? `${userLoginData.userEmail}` : "Niezalogowany"}{" "}
             </div>
             <UserLogo />
-            <Button variant="outline-success" onClick={handleShow}>
+            <Button
+              size="sm"
+              variant="outline-success"
+              onClick={handleAddModalShow}
+            >
               Dodaj transakcję
+            </Button>
+            <Button
+              size="sm"
+              variant="outline-secondary"
+              onClick={handleHistoryModalShow}
+            >
+              Historia transakcji{" "}
             </Button>
           </div>
         </div>
       </Container>
 
-      <AddStockModal show={modalShow} handleClose={handleClose} />
+      <AddStockModal show={addModalShow} handleClose={handleAddModalClose} />
+      <StockHistoryModal
+        show={historyModalShow}
+        handleClose={handleHistoryModalClose}
+      />
     </>
   );
 };

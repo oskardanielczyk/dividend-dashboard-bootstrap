@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -6,11 +6,12 @@ import axios from "axios";
 import { transactionSchema } from "../../utils/yup/schemas";
 import Error from "../error/error.component";
 import { UserContext } from "../../contexts/user/user.context";
-import { useContext } from "react";
+import { StocksContext } from "../../contexts/stocks/stocks.context";
 
 const AddStockModal = (props) => {
   const [error, setError] = useState(null);
   const { userLoginData } = useContext(UserContext);
+  const { setReloadData } = useContext(StocksContext);
 
   const onSubmit = async (values, actions) => {
     try {
@@ -32,9 +33,11 @@ const AddStockModal = (props) => {
       );
       actions.resetForm();
       props.handleClose();
+      setReloadData(true);
     } catch (error) {
       setError(
-        error || "Błąd podczas dodawania nowej transakcji, spróbuj ponownie"
+        error.response.data.message ||
+          "Błąd podczas dodawania nowej transakcji, spróbuj ponownie"
       );
       console.log(error);
     }

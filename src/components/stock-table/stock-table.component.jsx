@@ -1,26 +1,15 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { Container, Table } from "react-bootstrap";
 
 import { StocksContext } from "../../contexts/stocks/stocks.context";
 import StockTableRow from "../../components/stock-table-row/stock-table-row.component";
-import StockInfoModal from "../stock-info-modal/stock-info-modal.component";
 import Error from "../../components/error/error.component";
 
 const StockTable = () => {
-  const [modalShow, setModalShow] = useState(false);
-  const [selectedStockName, setSelectedStockName] = useState(null);
-  const [selectedStockTicker, setSelectedStockTicker] = useState(null);
-  const { allStocksData, isStocksLoading } = useContext(StocksContext);
-
-  // Funkcje otwierające oraz zamykające modala
-  const handleShow = () => setModalShow(true);
-  const handleClose = () => setModalShow(false);
-
-  // Funkcja reagująca na przycisk "Historia transakcji"
-  const handleButton = (stockName, stockTicker) => {
-    setSelectedStockName(stockName);
-    setSelectedStockTicker(stockTicker);
-  };
+  const {
+    state: { allStocksData },
+    state: { isStocksLoading },
+  } = useContext(StocksContext);
 
   return (
     <div>
@@ -32,7 +21,8 @@ const StockTable = () => {
         </div>
       ) : allStocksData.length > 0 ? (
         <Container>
-          <Table striped bordered>
+          <p className="lead">Portfolio</p>
+          <Table striped bordered size="sm" className="small">
             <thead>
               <tr>
                 <th>Nazwa waloru</th>
@@ -41,17 +31,11 @@ const StockTable = () => {
                 <th>Średnia cena zakupu</th>
                 <th>Zwrot</th>
                 <th>Ilość akcji</th>
-                <th>Akcje</th>
               </tr>
             </thead>
             <tbody>
               {allStocksData.map((stock) => (
-                <StockTableRow
-                  stock={stock}
-                  key={stock.id}
-                  modalShow={handleShow}
-                  handleButton={handleButton}
-                />
+                <StockTableRow stock={stock} key={stock.id} />
               ))}
             </tbody>
           </Table>
@@ -61,13 +45,6 @@ const StockTable = () => {
           <Error className="alert-warning" msg="Brak walorów" />
         </Container>
       )}
-
-      <StockInfoModal
-        show={modalShow}
-        handleClose={handleClose}
-        stockName={selectedStockName}
-        stockTicker={selectedStockTicker}
-      />
     </div>
   );
 };

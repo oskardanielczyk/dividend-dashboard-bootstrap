@@ -3,26 +3,10 @@ import { Modal, Button, Table } from "react-bootstrap";
 
 import { StocksContext } from "../../contexts/stocks/stocks.context";
 
-const StockInfoModal = (props) => {
-  const { stocksArray } = useContext(StocksContext);
-  const oneStock = [];
-
-  const createOneStockArray = (stocks) => {
-    if (!stocksArray) return;
-    stocks.forEach((stock) => {
-      if (stock.name === props.stockName) {
-        oneStock.push({
-          id: stock.id,
-          date: stock.date,
-          name: stock.name,
-          ticker: stock.ticker,
-          price: stock.price,
-          numberOfStocks: stock.numberOfStocks,
-        });
-      }
-    });
-  };
-  createOneStockArray(stocksArray);
+const StockHistoryModal = (props) => {
+  const {
+    state: { stocksArray },
+  } = useContext(StocksContext);
 
   return (
     <Modal
@@ -33,7 +17,7 @@ const StockInfoModal = (props) => {
       size="lg"
     >
       <Modal.Header closeButton>
-        <Modal.Title className="h5">{`${props.stockName} (${props.stockTicker}) - historia transakcji`}</Modal.Title>
+        <Modal.Title className="h5">Historia transakcji</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Table striped bordered>
@@ -46,7 +30,7 @@ const StockInfoModal = (props) => {
             </tr>
           </thead>
           <tbody>
-            {oneStock.map((stock) => (
+            {stocksArray.map((stock) => (
               <tr className="align-middle" key={stock.id}>
                 <td>{stock.name}</td>
                 <td>{stock.ticker}</td>
@@ -66,4 +50,4 @@ const StockInfoModal = (props) => {
   );
 };
 
-export default StockInfoModal;
+export default StockHistoryModal;

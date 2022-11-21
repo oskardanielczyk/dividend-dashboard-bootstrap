@@ -2,7 +2,9 @@ import { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const UserContext = createContext({
+  isLoggedIn: false,
   userLoginData: null,
+  dataReload: false,
 });
 
 export const UserProvider = ({ children }) => {

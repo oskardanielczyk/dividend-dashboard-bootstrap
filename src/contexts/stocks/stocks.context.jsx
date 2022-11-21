@@ -2,6 +2,7 @@ import { createContext, useReducer, useEffect, useContext } from "react";
 import axios from "axios";
 
 import { UserContext } from "../../contexts/user/user.context";
+import { useState } from "react";
 
 export const StocksContext = createContext({
   stocksArray: [],
@@ -47,6 +48,7 @@ const INITIAL_STATE = {
 export const StocksProvider = ({ children }) => {
   const { isLoggedIn, userLoginData } = useContext(UserContext);
   const [state, dispatch] = useReducer(stocksReducer, INITIAL_STATE);
+  const [reloadData, setReloadData] = useState(false);
 
   const allStocks = [];
   let transactions;
@@ -70,7 +72,8 @@ export const StocksProvider = ({ children }) => {
       }
     };
     if (isLoggedIn) downloadTransactions();
-  }, [isLoggedIn]);
+    setReloadData(false);
+  }, [isLoggedIn, reloadData]);
 
   useEffect(() => {
     createAllStocksArray(state.stocksArray);
@@ -111,9 +114,9 @@ export const StocksProvider = ({ children }) => {
     });
   };
 
-  // console.log("State", state);
-
   return (
-    <StocksContext.Provider value={state}>{children}</StocksContext.Provider>
+    <StocksContext.Provider value={{ state, setReloadData }}>
+      {children}
+    </StocksContext.Provider>
   );
 };

@@ -12,7 +12,9 @@ import { useContext } from "react";
 import { StocksContext } from "../../contexts/stocks/stocks.context";
 
 const TestChart = () => {
-  const { stocksArray } = useContext(StocksContext);
+  const {
+    state: { stocksArray },
+  } = useContext(StocksContext);
   const stocks = stocksArray;
   const allStocks = [];
 
