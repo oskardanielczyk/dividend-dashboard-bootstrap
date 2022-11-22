@@ -12,7 +12,7 @@ const Auth = () => {
   return (
     <Container>
       {!isLoggedIn ? (
-        <div className="d-flex justify-content-between">
+        <div className="d-flex flex-column flex-lg-row gap-3 justify-content-between">
           <Login />
           <Register />
         </div>
