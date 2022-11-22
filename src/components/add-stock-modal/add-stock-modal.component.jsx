@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useFormik } from "formik";
 import axios from "axios";
+import ReactDatePicker from "react-datepicker";
 
 import { transactionSchema } from "../../utils/yup/schemas";
 import Error from "../error/error.component";
@@ -15,11 +16,11 @@ const AddStockModal = (props) => {
 
   const onSubmit = async (values, actions) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `https://dividend-dashboard-backend.herokuapp.com/api/stocks`,
         {
           creator: userLoginData.userId,
-          date: "13-11-2022",
+          date: values.date,
           ticker: values.ticker,
           name: values.name,
           price: values.price,
@@ -51,8 +52,10 @@ const AddStockModal = (props) => {
     handleSubmit,
     isSubmitting,
     touched,
+    setFieldValue,
   } = useFormik({
     initialValues: {
+      date: new Date(),
       ticker: "",
       name: "",
       price: "",
@@ -75,6 +78,24 @@ const AddStockModal = (props) => {
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit} autoComplete="off">
+          <Form.Group className="mb-3">
+            <Form.Label>Data</Form.Label>
+            <ReactDatePicker
+              id="date"
+              selected={values.date}
+              placeholderText={values.date}
+              className="form-control text-muted"
+              dateFormat="dd.MM.yyyy"
+              onChange={(value) => {
+                setFieldValue("date", value);
+              }}
+              onBlur={handleBlur}
+              isInvalid={!!errors.date && touched.date}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.date}
+            </Form.Control.Feedback>
+          </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Ticker</Form.Label>
             <Form.Control

@@ -11,7 +11,7 @@ const Navigation = () => {
   return (
     <>
       <Stack gap={3}>
-        <Navbar bg="dark" expand="lg" variant="dark">
+        <Navbar bg="dark" expand="lg" variant="dark" fixed="top">
           <Container>
             <Navbar.Brand href="/">Dividend-dashboard</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
