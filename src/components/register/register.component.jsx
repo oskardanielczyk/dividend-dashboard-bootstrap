@@ -11,7 +11,7 @@ const Register = () => {
   const onSubmit = async (event) => {
     try {
       const response = await axios.post(
-        `https://dividend-dashboard-backend.herokuapp.com/api/users/signup`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/users/signup`,
         {
           name: values.nameSubmit,
           email: values.emailSubmit,

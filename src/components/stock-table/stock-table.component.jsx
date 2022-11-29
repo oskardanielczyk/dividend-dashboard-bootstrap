@@ -22,12 +22,13 @@ const StockTable = () => {
       ) : allStocksData.length > 0 ? (
         <Container>
           <p className="lead">Portfolio</p>
-          <Table striped bordered size="sm" className="small" responsive>
-            <thead>
+          <Table size="sm" className="small" responsive>
+            <thead className="table-dark">
               <tr>
-                <th className="d-none d-sm-table-cell">Nazwa</th>
+                <th className="d-none d-lg-table-cell">Nazwa</th>
                 <th>Ticker</th>
                 <th>Cena</th>
+                <th>Zmiana dzienna</th>
                 <th>Śr. cena</th>
                 <th>Zwrot</th>
                 <th>Ilość</th>

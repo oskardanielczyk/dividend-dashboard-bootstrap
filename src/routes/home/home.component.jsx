@@ -14,8 +14,8 @@ const Home = () => {
       {isLoggedIn ? (
         <>
           <UserInfo />
-          <StockTable />
           <TestChart />
+          <StockTable />
         </>
       ) : (
         <Auth />

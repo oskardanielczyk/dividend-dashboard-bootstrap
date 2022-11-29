@@ -3,6 +3,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { useFormik } from "formik";
 import axios from "axios";
 import ReactDatePicker from "react-datepicker";
+import AsyncSelect from "react-select/async";
 
 import { transactionSchema } from "../../utils/yup/schemas";
 import Error from "../error/error.component";
@@ -11,18 +12,44 @@ import { StocksContext } from "../../contexts/stocks/stocks.context";
 
 const AddStockModal = (props) => {
   const [error, setError] = useState(null);
+  const [inputValue, setValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState(null);
   const { userLoginData } = useContext(UserContext);
   const { setReloadData } = useContext(StocksContext);
+
+  // handle input change event
+  const handleInputChange = (value) => {
+    setValue(value);
+  };
+
+  // handle selection
+  const handleChangeTicker = (value) => {
+    setSelectedValue(value);
+  };
+
+  // load options using API call
+  const loadOptions = async (inputValue) => {
+    if (inputValue === "") return;
+    try {
+      const response = await axios.get(
+        `https://eodhistoricaldata.com/api/search/${inputValue}?api_token=${process.env.REACT_APP_API_TOKEN}`
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const onSubmit = async (values, actions) => {
     try {
       await axios.post(
-        `https://dividend-dashboard-backend.herokuapp.com/api/stocks`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/stocks`,
         {
           creator: userLoginData.userId,
           date: values.date,
-          ticker: values.ticker,
-          name: values.name,
+          ticker: selectedValue.Code,
+          exchange: selectedValue.Exchange,
+          name: selectedValue.Name,
           price: values.price,
           numberOfStocks: values.quantity,
         },
@@ -57,7 +84,6 @@ const AddStockModal = (props) => {
     initialValues: {
       date: new Date(),
       ticker: "",
-      name: "",
       price: "",
       quantity: "",
     },
@@ -96,38 +122,24 @@ const AddStockModal = (props) => {
               {errors.date}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Ticker</Form.Label>
-            <Form.Control
-              id="ticker"
-              type="text"
-              placeholder="Podaj ticker akcji"
-              size="sm"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.ticker}
-              isInvalid={!!errors.ticker && touched.ticker}
+          <Form.Group className="mb-3" controlId="formBasicCurrency">
+            <Form.Label>Walor</Form.Label>
+            <AsyncSelect
+              cacheOptions
+              defaultOptions
+              value={selectedValue}
+              getOptionLabel={(e) =>
+                e.Code + " - " + e.Name + " - " + e.Exchange
+              }
+              getOptionValue={(e) => e.Code}
+              loadOptions={loadOptions}
+              onInputChange={handleInputChange}
+              onChange={handleChangeTicker}
             />
-            <Form.Control.Feedback type="invalid">
-              {errors.ticker}
-            </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Nazwa</Form.Label>
-            <Form.Control
-              id="name"
-              type="text"
-              placeholder="Podaj nazwę akcji"
-              size="sm"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.name}
-              isInvalid={!!errors.name && touched.name}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.name}
-            </Form.Control.Feedback>
-          </Form.Group>
+          <Form.Control.Feedback type="invalid">
+            {errors.ticker}
+          </Form.Control.Feedback>
           <Form.Group className="mb-3">
             <Form.Label>Cena</Form.Label>
             <Form.Control

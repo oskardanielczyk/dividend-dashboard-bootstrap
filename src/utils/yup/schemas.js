@@ -22,8 +22,6 @@ export const signupSchema = yup.object().shape({
 });
 
 export const transactionSchema = yup.object().shape({
-  ticker: yup.string().required("Pole wymagane"),
-  name: yup.string().required("Pole wymagane"),
   price: yup
     .number()
     .typeError("Cena akcji musi być liczbą")

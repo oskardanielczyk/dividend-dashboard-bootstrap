@@ -14,7 +14,7 @@ const Login = () => {
   const onSubmit = async (values, actions) => {
     try {
       const response = await axios.post(
-        `https://dividend-dashboard-backend.herokuapp.com/api/users/login`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/users/login`,
         {
           email: values.email,
           password: values.password,

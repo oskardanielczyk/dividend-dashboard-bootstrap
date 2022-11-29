@@ -6,6 +6,7 @@ import { useState } from "react";
 
 export const StocksContext = createContext({
   stocksArray: [],
+  portfolioValue: 0,
   allStocksData: [],
   isStocksLoading: false,
 });
@@ -23,6 +24,11 @@ const stocksReducer = (state, action) => {
       return {
         ...state,
         allStocksData: payload,
+      };
+    case "UPDATE_PORTFOLIO_VALUE":
+      return {
+        ...state,
+        portfolioValue: payload,
       };
     case "TURN_ON_LOADING":
       return {
@@ -51,6 +57,7 @@ export const StocksProvider = ({ children }) => {
   const [reloadData, setReloadData] = useState(false);
 
   const allStocks = [];
+  let portfolioValue = 0;
   let transactions;
 
   useEffect(() => {
@@ -58,7 +65,12 @@ export const StocksProvider = ({ children }) => {
       dispatch({ type: "TURN_ON_LOADING" });
       try {
         transactions = await axios.get(
-          `https://dividend-dashboard-backend.herokuapp.com/api/stocks/user/${userLoginData.userId}`
+          `${process.env.REACT_APP_BACKEND_URL}/api/stocks/user/${userLoginData.userId}`,
+          {
+            headers: {
+              authorization: `Bearer: ${userLoginData.token}`,
+            },
+          }
         );
         if (transactions)
           dispatch({
@@ -70,6 +82,16 @@ export const StocksProvider = ({ children }) => {
         console.log(error);
         dispatch({ type: "TURN_OFF_LOADING" });
       }
+
+      // try {
+      //   const response = await axios.get(
+      //     `https://eodhistoricaldata.com/api/real-time/AAPL.US?api_token=63846ed0c02bb2.60812969&fmt=json&s=MSFT,BAC`
+      //   );
+      //   // response.data.map((el) => console.log(el.close, el.code, el.change_p));
+      //   console.log(response);
+      // } catch (error) {
+      //   console.log(error);
+      // }
     };
     if (isLoggedIn) downloadTransactions();
     setReloadData(false);
@@ -87,7 +109,9 @@ export const StocksProvider = ({ children }) => {
         ticker,
         averagePrice = 0,
         numberOfStocks = 0,
-        price = 164.76;
+        price = 0,
+        dayChange = 0;
+
       stocks.forEach((stock) => {
         if (stock.name === key) {
           id = stock.id;
@@ -96,6 +120,9 @@ export const StocksProvider = ({ children }) => {
             ? (averagePrice = stock.price)
             : (averagePrice = (averagePrice + stock.price) / 2);
           numberOfStocks += stock.numberOfStocks;
+          price = stock.closePrice;
+          dayChange = stock.dayChange;
+          portfolioValue += price * numberOfStocks;
         }
       });
       allStocks.push({
@@ -104,6 +131,7 @@ export const StocksProvider = ({ children }) => {
         ticker,
         averagePrice,
         price,
+        dayChange,
         return: ((price - averagePrice) / averagePrice) * 100,
         numberOfStocks,
       });
@@ -111,6 +139,10 @@ export const StocksProvider = ({ children }) => {
     dispatch({
       type: "UPDATE_ALL_STOCKS",
       payload: allStocks,
+    });
+    dispatch({
+      type: "UPDATE_PORTFOLIO_VALUE",
+      payload: portfolioValue,
     });
   };
 
